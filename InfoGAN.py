@@ -55,7 +55,7 @@ class InfoGAN:
                 z = torch.cat([z_dict[k] for k in z_dict.keys()], dim = 1)
 
                 data = Variable(data.float().cuda(async = True)) / 255
-                targets = Variable(targets.float().cuda(async = True)).detach()
+                targets = Variable(targets.float().cuda(async = True))
 
                 # Train the discriminator
                 # Forward pass on real MNIST & Loss
@@ -172,20 +172,20 @@ class InfoGAN:
 
         torch.save(self.gen.state_dict(), directory + 'gen.torch')
         torch.save(self.dis.state_dict(), directory + 'dis.torch')
-        if c1_len:
+        if self.c1_len:
             torch.save(self.Q_cat.state_dict(), directory + 'qcat.torch')
-        if c2_len:
+        if self.c2_len:
             torch.save(self.Q_con.state_dict(), directory + 'qcon.torch')
-        if c3_len:
+        if self.c3_len:
             torch.save(self.Q_bin.state_dict(), directory + 'qbin.torch')
 
 
     def load(self, directory):
-        gan.gen.load_state_dict(torch.load(directory + 'gen.torch'))
-        gan.dis.load_state_dict(torch.load(directory + 'dis.torch'))
-        if c1_len:
-            gan.Q_cat.load_state_dict(torch.load(directory + 'qcat.torch'))
-        if c2_len:
-            gan.Q_con.load_state_dict(torch.load(directory + 'qcon.torch'))
-        if c3_len:
-            gan.Q_bin.load_state_dict(torch.load(directory + 'qbin.torch'))
+        self.gen.load_state_dict(torch.load(directory + 'gen.torch'))
+        self.dis.load_state_dict(torch.load(directory + 'dis.torch'))
+        if self.c1_len:
+            self.Q_cat.load_state_dict(torch.load(directory + 'qcat.torch'))
+        if self.c2_len:
+            self.Q_con.load_state_dict(torch.load(directory + 'qcon.torch'))
+        if self.c3_len:
+            self.Q_bin.load_state_dict(torch.load(directory + 'qbin.torch'))
