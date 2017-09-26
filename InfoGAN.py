@@ -1,5 +1,7 @@
 import os
 
+import numpy as np
+
 import torch
 from torch.autograd import Variable
 from torch import nn
@@ -56,16 +58,6 @@ class InfoGAN:
 
                 data = Variable(data.float().cuda(async = True)) / 255
                 targets = Variable(targets.float().cuda(async = True))
-
-                '''
-                So here's how it's gonna work. This is the most efficient solution I could come up with as of now.
-                We will run a forward and backward pass on the real data. This will produce gradients for Q_cat and dis.
-                Then we will run a forward on the generated data and do a backward pass for the latent code objective.
-                This will produce gradients of the latent code objective for everything.
-                We will then run the update for the discriminator and the latent code output layers.
-                Lastly, we will run the backward pass for the adversarial objective for the generator, since we don't want its
-                gradients interfering with the discriminator. We will then do the generator's update.
-                '''
 
                 # Forward pass on real MNIST
                 out_dis, hid = self.dis(data)
@@ -127,7 +119,7 @@ class InfoGAN:
 
             pb.close()
             plt.subplot(10, 10, epoch + 1)
-            plt.imshow(out_gen.cpu().data.numpy()[0, 0], cmap = 'gray')
+            plt.imshow(np.squeeze(np.transpose(out_gen.cpu().data.numpy()[0], (1, 2, 0))))
 
 
     # Generate a noise vector and random latent codes for generator
