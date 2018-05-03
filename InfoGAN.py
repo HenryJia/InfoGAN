@@ -158,7 +158,7 @@ class InfoGAN:
         if self.c2_len:
             out += [self.Q_con(hid)]
         if self.c3_len:
-            out += [F.sigmoid(Q_bin(hid))]
+            out += [F.sigmoid(self.Q_bin(hid))]
 
         return out
 
